@@ -126,7 +126,7 @@ static void camera_video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T
             fps = frame_count;
         }
         userdata->fps = fps;
-        fprintf(stderr, "  Frame = %d,  Framerate = %.1f fps \n", frame_count, fps);
+        //fprintf(stderr, "  Frame = %d,  Framerate = %.1f fps \n", frame_count, fps);
     }
 
 
@@ -272,8 +272,8 @@ int setup_camera(PORT_USERDATA *userdata) {
     camera_video_port->buffer_size = format->es->video.width * format->es->video.height * 12 / 8;
     camera_video_port->buffer_num = 2;
 
-    fprintf(stderr, "INFO:camera video buffer_size = %d\n", camera_video_port->buffer_size);
-    fprintf(stderr, "INFO:camera video buffer_num = %d\n", camera_video_port->buffer_num);
+    //fprintf(stderr, "INFO:camera video buffer_size = %d\n", camera_video_port->buffer_size);
+    //fprintf(stderr, "INFO:camera video buffer_num = %d\n", camera_video_port->buffer_num);
 
     status = mmal_port_format_commit(camera_video_port);
     if (status != MMAL_SUCCESS) {
@@ -306,7 +306,7 @@ int setup_camera(PORT_USERDATA *userdata) {
         printf("%s: Failed to start capture\n", __func__);
     }
 
-    fprintf(stderr, "INFO: camera created\n");
+    //fprintf(stderr, "INFO: camera created\n");
     return 0;
 }
 
@@ -370,11 +370,11 @@ int setup_encoder(PORT_USERDATA *userdata) {
         return -1;
     }
 
-    fprintf(stderr, " encoder input buffer_size = %d\n", encoder_input_port->buffer_size);
-    fprintf(stderr, " encoder input buffer_num = %d\n", encoder_input_port->buffer_num);
+    //fprintf(stderr, " encoder input buffer_size = %d\n", encoder_input_port->buffer_size);
+    //fprintf(stderr, " encoder input buffer_num = %d\n", encoder_input_port->buffer_num);
 
-    fprintf(stderr, " encoder output buffer_size = %d\n", encoder_output_port->buffer_size);
-    fprintf(stderr, " encoder output buffer_num = %d\n", encoder_output_port->buffer_num);
+    //fprintf(stderr, " encoder output buffer_size = %d\n", encoder_output_port->buffer_size);
+    //fprintf(stderr, " encoder output buffer_num = %d\n", encoder_output_port->buffer_num);
 
     encoder_input_port_pool = (MMAL_POOL_T *) mmal_port_pool_create(encoder_input_port, encoder_input_port->buffer_num, encoder_input_port->buffer_size);
     userdata->encoder_input_pool = encoder_input_port_pool;
@@ -384,7 +384,7 @@ int setup_encoder(PORT_USERDATA *userdata) {
         fprintf(stderr, "Error: unable to enable encoder input port (%u)\n", status);
         return -1;
     }
-    fprintf(stderr, "INFO:Encoder input pool has been created\n");
+    //fprintf(stderr, "INFO:Encoder input pool has been created\n");
 
 
     encoder_output_port_pool = (MMAL_POOL_T *) mmal_port_pool_create(encoder_output_port, encoder_output_port->buffer_num, encoder_output_port->buffer_size);
@@ -396,11 +396,11 @@ int setup_encoder(PORT_USERDATA *userdata) {
         fprintf(stderr, "Error: unable to enable encoder output port (%u)\n", status);
         return -1;
     }
-    fprintf(stderr, "INFO:Encoder output pool has been created\n");    
+    //fprintf(stderr, "INFO:Encoder output pool has been created\n");    
 
     fill_port_buffer(encoder_output_port, encoder_output_port_pool);
 
-    fprintf(stderr, "INFO:Encoder has been created\n");
+    //fprintf(stderr, "INFO:Encoder has been created\n");
     return 0;
 }
 
@@ -445,7 +445,7 @@ int setup_preview(PORT_USERDATA *userdata) {
         fprintf(stderr, "Error: unable to enable connection (%u)\n", status);
         return -1;
     }
-    fprintf(stderr, "INFO: preview created\n");
+    //fprintf(stderr, "INFO: preview created\n");
     return 0;
 }
 
@@ -462,16 +462,37 @@ int main(int argc, char** argv) {
     cairo_surface_t *surface,*surface2;
     cairo_t *context,*context2;
 
+
+   int i;
+   int duration = 5;
+   int valid = 1;
+   char text[256];
+
+   strcpy (text,"hello");
+   for (i = 1; i < argc && valid; i++)
+   {
+	if (strcmp(argv[i], "-s")==0) {
+		strcpy(text, argv[i + 1]);
+		i++;
+		}
+	if (strcmp(argv[i], "-t")==0) {
+		sscanf(argv[i + 1], "%u", &duration);
+		i++;
+		}
+   }
+    //fprintf(stderr, "CAPTION : %s\n", text);
+    duration = duration * 30;
+
     memset(&userdata, 0, sizeof (PORT_USERDATA));
 
     userdata.width = VIDEO_WIDTH;
     userdata.height = VIDEO_HEIGHT;
     userdata.fps = 0.0;
 
-    fprintf(stderr, "VIDEO_WIDTH : %i\n", userdata.width );
-    fprintf(stderr, "VIDEO_HEIGHT: %i\n", userdata.height );
-    fprintf(stderr, "VIDEO_FPS   : %i\n",  VIDEO_FPS);
-    fprintf(stderr, "Running...\n");
+    //fprintf(stderr, "VIDEO_WIDTH : %i\n", userdata.width );
+    //fprintf(stderr, "VIDEO_HEIGHT: %i\n", userdata.height );
+    //fprintf(stderr, "VIDEO_FPS   : %i\n",  VIDEO_FPS);
+    //fprintf(stderr, "Running...\n");
 
     bcm_host_init();
 
@@ -513,15 +534,8 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-
-    char text[256];
-
-    //fake Speed and GPS data
-    float lat = 47.4912;
-    float lon = 8.906;
-    float speed = 20.0;
-
-    while (1) {
+    
+    while (duration >0) {
         //Update Draw to unused buffer that way there is no flickering of the overlay text if the overlay update rate
         //and video FPS are not the same
         if (userdata.overlay == 1) { 
@@ -532,7 +546,7 @@ int main(int argc, char** argv) {
             cairo_set_source_rgba(context, 1.0, 1.0, 1.0, 1.0);        
             cairo_move_to(context, 0.0, 30.0);
             cairo_set_font_size(context, 20.0);
-            sprintf(text, "%.2fFPS GPS: %.3f, %.3f Speed %.1fkm/h b0", userdata.fps,lat,lon,speed);
+            //sprintf(text, "%.2fFPS GPS: %.3f, %.3f Speed %.1fkm/h b0", userdata.fps,lat,lon,speed);
             cairo_show_text(context, text);
             userdata.overlay = 0;
         }
@@ -544,16 +558,14 @@ int main(int argc, char** argv) {
             cairo_set_source_rgba(context2, 1.0, 1.0, 1.0, 1.0);        
             cairo_move_to(context2, 0.0, 30.0);
             cairo_set_font_size(context2, 20.0);
-            sprintf(text, "%.2fFPS GPS: %.3f, %.3f Speed %.1fkm/h b1", userdata.fps,lat,lon,speed);
+            //sprintf(text, "%.2fFPS GPS: %.3f, %.3f Speed %.1fkm/h b1", userdata.fps,lat,lon,speed);
             //sprintf(text, "%.2fFPS GPS: 0.00000, 0.00000 Speed 0km/h b1", userdata.fps);
             cairo_show_text(context2, text);
             userdata.overlay = 1;
         }
 
 
-        lat += 0.01;
-        lon += 0.01;
-        speed += 0.1;
+        duration--;
         usleep(30000);
     }
 
