@@ -468,7 +468,7 @@ int main(int argc, char** argv) {
    int valid = 1;
    char text[256];
 
-   strcpy (text,"hello");
+   strcpy (text,"Camera 1");
    for (i = 1; i < argc && valid; i++)
    {
 	if (strcmp(argv[i], "-s")==0) {
