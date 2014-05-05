@@ -1,6 +1,6 @@
 Simple Raspberry Pi MMAL project
 
-video_record.c  - records vdieo with text overlay, outputs h264
+video_record.c  - records video with text overlay, outputs h264
 
 
 Build
