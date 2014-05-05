@@ -13,9 +13,7 @@ Build
 1. Place  Raspberry Pi userland project in /home/pi/src/raspberrypi/userland
     
     $ mkdir -p /home/pi/src/raspberrypi
-    
     $ cd /home/pi/src/raspberrypi
-        
     $ git clone --depth 1 https://github.com/raspberrypi/userland.git
 
 
@@ -27,11 +25,8 @@ Build
 3. Build project 
 
     $ mkdir build
-    
     $ cd build
-    
     $ cmake ../
-    
     $ make 
     
     
