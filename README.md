@@ -6,6 +6,8 @@ still_capture.c - captures  still jpeg image with text overlay
 
 video_record.c  - records video with text overlay, outputs h264
 
+-t 3 - run for 3 seconds
+-s "camera 1" - overlay text
 
 Build
 -----
