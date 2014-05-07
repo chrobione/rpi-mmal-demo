@@ -17,6 +17,7 @@ add_executable(mmaldemo main.c)
 add_executable(mmal_buffer_demo buffer_demo.c)
 add_executable(mmal_opencv_demo opencv_demo.c)
 add_executable(mmal_video_record video_record.c)
+add_executable(mmal_still_capture still_capture.c)
 
 find_package( OpenCV REQUIRED )
 
@@ -25,3 +26,4 @@ target_link_libraries(mmaldemo mmal_core mmal_util mmal_vc_client vcos bcm_host)
 target_link_libraries(mmal_buffer_demo mmal_core mmal_util mmal_vc_client vcos bcm_host)
 target_link_libraries(mmal_opencv_demo mmal_core mmal_util mmal_vc_client vcos bcm_host ${OpenCV_LIBS} vgfont openmaxil EGL)
 target_link_libraries(mmal_video_record mmal_core mmal_util mmal_vc_client vcos bcm_host cairo)
+target_link_libraries(mmal_still_capture mmal_core mmal_util mmal_vc_client vcos bcm_host cairo)
