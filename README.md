@@ -2,7 +2,7 @@ Simple Raspberry Pi MMAL project
 
 main.c - just displays camera preview until ctrl-c
 
-
+still_capture.c - captures  still jpeg image with text overlay
 
 video_record.c  - records video with text overlay, outputs h264
 
