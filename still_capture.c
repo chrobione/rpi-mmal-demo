@@ -319,7 +319,7 @@ int setup_encoder(PORT_USERDATA *userdata) {
     MMAL_POOL_T *encoder_input_port_pool;
     MMAL_POOL_T *encoder_output_port_pool;
 
-    status = mmal_component_create(MMAL_COMPONENT_DEFAULT_VIDEO_ENCODER, &encoder);
+    status = mmal_component_create(MMAL_COMPONENT_DEFAULT_IMAGE_ENCODER, &encoder);
     if (status != MMAL_SUCCESS) {
         fprintf(stderr, "Error: unable to create preview (%u)\n", status);
         return -1;
@@ -346,9 +346,7 @@ int setup_encoder(PORT_USERDATA *userdata) {
         return -1;
     }
 
-    // Only supporting H264 at the moment
-    encoder_output_port->format->encoding = MMAL_ENCODING_H264;
-    encoder_output_port->format->bitrate = 2000000;
+    encoder_output_port->format->encoding = MMAL_ENCODING_JPEG;
 
     encoder_output_port->buffer_size = encoder_output_port->buffer_size_recommended;
 
@@ -464,7 +462,7 @@ int main(int argc, char** argv) {
 
 
    int i;
-   int duration = 5;
+   int duration = 1;
    int valid = 1;
    char text[256];
 
@@ -484,7 +482,7 @@ int main(int argc, char** argv) {
 		}
    }
     //fprintf(stderr, "CAPTION : %s\n", text);
-    duration = duration * 30;
+    duration = 3;
 
     memset(&userdata, 0, sizeof (PORT_USERDATA));
 
